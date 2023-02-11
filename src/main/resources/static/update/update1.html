@@ -1,0 +1,52 @@
+<div>
+    <p></p>
+    <h3>Редактировать книгу</h3>
+    <p></p>
+
+    <tr ng-repeat="p in updateForm">
+
+
+
+    <div class="col-md-8">
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="name">Название</span>
+            <input id="myInput" type="text" class="form-control" aria-label="Sizing example input"
+                   aria-describedby="inputGroup-sizing-default" value="Recipient's username">
+        </div>
+    </div>
+
+
+
+    <div class="input-group-prepend">
+        <label class="input-group-text" for="authorId">Автор</label>
+    </div>
+    <select class="custom-select" name="authorId" id="authorId" >
+        <option th:each="a : ${authors}" th:selected="${a.id == book?.author?.id}" th:value="${a.id}" th:text="${a.name}">
+    </select>
+
+
+    <div class="input-group-prepend">
+        <label class="input-group-text" for="genreId">Жанр</label>
+    </div>
+    <select class="custom-select" name="genreId" id="genreId" >
+        <option th:each="g : ${genres}" th:selected="${g.id == book?.genre?.id}" th:value="${g.id}" th:text="${g.name}">
+    </select>
+
+
+    <div class="col-12">
+        <button class="btn btn-primary" type="submit">Сохранить</button>
+    </div>
+
+
+
+        <input id="myInput" type="text" value="Swag" />
+
+        <script>
+            var test = updateForm.name;
+            document.getElementById("myInput").value = test;
+        </script>
+
+
+    </tr>
+
+</div>

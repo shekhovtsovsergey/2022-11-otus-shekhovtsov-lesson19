@@ -1,6 +1,6 @@
 <!doctype html>
 
-<html ng-app="app">
+<html ng-app="market">
 
 <head>
     <meta charset="utf-8">
@@ -9,46 +9,38 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular.min.js"></script>
-    <script src="index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.11/ngStorage.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular-route.min.js"></script>
 </head>
 
 <body>
 
 <div class="container" ng-controller="indexController">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="#!/welcome">Главная страница</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#!/store">Список книг</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#!/create">Добавить книгу</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
-    <h3>Список книг</h3>
-    <table class="table">
-        <tr>
-            <td>Номер</td>
-            <td>Название</td>
-            <td>Автор</td>
-            <td>Жанр</td>
-            <td>Комментарии</td>
-            <td>Описание</td>
-            <td>Удалить</td>
-            <td>Редактировать</td>
-        </tr>
-        <tbody>
-        <tr ng-repeat="p in productsList">
-            <td>{{p.id}}</td>
-            <td>{{p.name}}</td>
-            <td>{{p.author}}</td>
-            <td>{{p.genre}}</td>
-            <td>
-                <button type="button" class="btn btn-primary" ng-click="showProductInfo(p.id)">Комментарии</button>
-            </td>
-            <td>
-                <button type="button" class="btn btn-warning" ng-click="showProductInfo(p.id)">Описание</button>
-            </td>
-            <td>
-                <button type="button" class="btn btn-danger" ng-click="deleteProductById(p.id)">Удалить</button>
-            </td>
-            <td>
-                <button type="button" class="btn btn-green" ng-click="deleteProductById(p.id)">Редактировать</button>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <ng-view></ng-view>
+
+    <script src="index.js"></script>
+    <script src="store/store.js"></script>
+    <script src="cart/cart.js"></script>
+    <script src="welcome/welcome.js"></script>
+    <script src="update/update.js"></script>
+    <script src="create/create.js"></script>
+
 </div>
 </body>
 </html>

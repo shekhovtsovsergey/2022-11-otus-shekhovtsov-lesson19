@@ -1,0 +1,34 @@
+<div>
+    <p></p>
+    <h3>Список книг</h3>
+    <p></p>
+
+    <table class="table">
+        <tr>
+            <td>Номер</td>
+            <td>Название</td>
+            <td>Автор</td>
+            <td>Жанр</td>
+            <td>Комментарии</td>
+            <td>Редактировать</td>
+            <td>Удалить</td>
+        </tr>
+        <tbody>
+        <tr ng-repeat="p in bookList">
+            <td>{{p.id}}</td>
+            <td>{{p.name}}</td>
+            <td>{{p.author}}</td>
+            <td>{{p.genre}}</td>
+            <td>
+                <a class="nav-link" href="#!/cart/" ng-click="addToCart(p.id)">Комментарии</a>
+            </td>
+            <td>
+                <a class="nav-link" href="#!/update/" ng-click="updateBook(p.id)">Редактировать</a>
+            </td>
+            <td>
+                <button type="button" class="btn btn-danger" ng-click="deleteBook(p.id)">Удалить</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

@@ -57,8 +57,6 @@ public class LibraryServiceImpl implements LibraryService {
         return bookConverter.entityToDto(bookDao.save(new Book(id,name, new Author(authorId,null), new Genre(genreId,null),null)));
     }
 
-
-
     @Override
     public BookDto getBookById(Long id) {
         Book book = new Book();
@@ -71,6 +69,7 @@ public class LibraryServiceImpl implements LibraryService {
 
     @Override
     public List<CommentDto> getAllCommentsByBook(Long id) {
+        System.out.println(bookDao.findBookById(id).getComments());
       return  bookDao.findBookById(id).getComments().stream().map(commentConverter::entityToDto).collect(Collectors.toList());
     }
 

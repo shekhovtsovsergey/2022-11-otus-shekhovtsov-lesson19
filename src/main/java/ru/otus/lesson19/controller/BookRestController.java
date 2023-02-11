@@ -26,13 +26,13 @@ public class BookRestController {
     @PostMapping("/book")
     public String createBook(String name, Long authorId, Long genreId) {
         libraryService.createBook(name, authorId, genreId);
-        return "redirect:/book/all";
+        return "redirect:/book/";
     }
 
     @PutMapping("/book/{id}")
     public String updateBook(Long id, String name, Long authorId, Long genreId) {
         libraryService.updateBook(id,name, authorId, genreId);
-        return "redirect:/book/all";
+        return "redirect:/book/";
     }
 
     @GetMapping("/book/{id}")
@@ -41,9 +41,9 @@ public class BookRestController {
     }
 
     @DeleteMapping("/book/{id}")
-    public String deleteBookById(@RequestParam(name = "id") Long id) {
+    public List<BookDto> deleteBookById(@PathVariable(name = "id") Long id) {
         libraryService.deleteBookById(id);
-        return "redirect:/book/all";
+        return libraryService.getAllBooks();
     }
 
     @GetMapping("/book/{id}/comment")

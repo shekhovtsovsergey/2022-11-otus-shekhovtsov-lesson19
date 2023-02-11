@@ -1,0 +1,54 @@
+<!doctype html>
+
+<html ng-app="app">
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular.min.js"></script>
+    <script src="index.js"></script>
+</head>
+
+<body>
+
+<div class="container" ng-controller="indexController">
+
+    <h3>Список книг</h3>
+    <table class="table">
+        <tr>
+            <td>Номер</td>
+            <td>Название</td>
+            <td>Автор</td>
+            <td>Жанр</td>
+            <td>Комментарии</td>
+            <td>Описание</td>
+            <td>Редактировать</td>
+            <td>Удалить</td>
+        </tr>
+        <tbody>
+        <tr ng-repeat="p in bookList">
+            <td>{{p.id}}</td>
+            <td>{{p.name}}</td>
+            <td>{{p.author}}</td>
+            <td>{{p.genre}}</td>
+            <td>
+                    <a class="nav-link" href="/book/(p.id)/comment">Комментарии</a>
+            </td>
+            <td>
+                <button type="button" class="btn btn-warning" ng-click="showProductInfo(p.id)">Описание</button>
+            </td>
+            <td>
+                <button type="button" class="btn btn-green" ng-click="deleteProductById(p.id)">Редактировать</button>
+            </td>
+            <td>
+                <button type="button" class="btn btn-danger" ng-click="deleteProductById(p.id)">Удалить</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

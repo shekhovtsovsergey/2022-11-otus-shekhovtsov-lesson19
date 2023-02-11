@@ -10,7 +10,7 @@ import ru.otus.lesson19.model.Book;
 @AllArgsConstructor
 public class CommentDto {
     private Long id;
-    private Book book;
+    private String book;
     private String authorName;
     private String comment;
 }

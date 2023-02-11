@@ -1,60 +1,62 @@
-angular.module('app', []).controller('indexController', function ($scope, $http) {
-    $scope.loadProducts = function () {
-        $http.get('http://localhost:8080/api/v1/book/').then(function (response) {
-            $scope.productsList = response.data;
-        });
+(function () {
+    angular
+        .module('market', ['ngRoute', 'ngStorage'])
+        .config(config)
+        .run(run);
+
+    function config($routeProvider) {
+        $routeProvider
+            .when('/', {
+                templateUrl: 'welcome/welcome.html',
+                controller: 'welcomeController'
+            })
+            .when('/store', {
+                templateUrl: 'store/store.html',
+                controller: 'storeController'
+            })
+            .when('/cart', {
+                templateUrl: 'cart/cart.html',
+                controller: 'cartController'
+            })
+            .when('/update', {
+                templateUrl: 'update/update.html',
+                controller: 'updateController'
+            })
+            .when('/create', {
+                templateUrl: 'create/create.html',
+                controller: 'createController'
+            })
+            .otherwise({
+                redirectTo: '/'
+            });
     }
 
-    $scope.showProductInfo = function (productId) {
-        $http.get('http://localhost:8189/api/v1/products/' + productId).then(function (response) {
-            alert(response.data.title);
-        });
+
+    function run($rootScope, $http, $localStorage) {
+
     }
 
-    $scope.deleteProductById = function (productId) {
-        $http.delete('http://localhost:8189/api/v1/products/' + productId).then(function (response) {
-            $scope.loadProducts();
-        });
-    }
+})();
 
-    $scope.loadProducts();
+angular.module('market').controller('indexController', function ($rootScope, $scope, $http, $location, $localStorage) {
+    $scope.tryToAuth = function () {
+        $http.post('http://localhost:5555/auth/auth', $scope.user)
+            .then(function successCallback(response) {
+                if (response.data.token) {
+                    $http.defaults.headers.common.Authorization = 'Bearer ' + response.data.token;
+                    $localStorage.winterMarketUser = {username: $scope.user.username, token: response.data.token};
 
-    // const contextPath = 'http://localhost:8189/market';
-    //
-    // $scope.fillTable = function () {
-    //     $http.get(contextPath + '/api/v1/products')
-    //         .then(function (response) {
-    //             $scope.ProductsList = response.data;
-    //         });
-    // };
-    //
-    // $scope.submitCreateNewProduct = function () {
-    //     $http.post(contextPath + '/api/v1/products', $scope.newProduct)
-    //         .then(function (response) {
-    //             // $scope.BooksList.push(response.data);
-    //             $scope.fillTable();
-    //         });
-    // };
-    //
-    // $scope.applyFilter = function () {
-    //     $http({
-    //         url: contextPath + '/api/v1/books',
-    //         method: "GET",
-    //         params: {book_title: $scope.bookFilter.title}
-    //     }).then(function (response) {
-    //         $scope.BooksList = response.data;
-    //     });
-    // }
+                    $location.path('/');
+                }
+            }, function errorCallback(response) {
+            });
+    };
 
-    // $scope.deleteProductById = function(productId) {
-    //     console.log('deleteTest');
-    //     $http({
-    //         url: contextPath + '/api/v1/products/' + productId,
-    //         method: "DELETE"
-    //     }).then(function (response) {
-    //         $scope.fillTable();
-    //     });
-    // }
-    //
-    // $scope.fillTable();
+    $rootScope.isUserLoggedIn = function () {
+        if ($localStorage.winterMarketUser) {
+            return true;
+        } else {
+            return false;
+        }
+    };
 });

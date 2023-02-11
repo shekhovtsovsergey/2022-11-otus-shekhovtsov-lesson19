@@ -5,11 +5,7 @@ import ru.otus.lesson19.dto.AuthorDto;
 import ru.otus.lesson19.dto.BookDto;
 import ru.otus.lesson19.dto.CommentDto;
 import ru.otus.lesson19.dto.GenreDto;
-import ru.otus.lesson19.model.Author;
-import ru.otus.lesson19.model.Book;
-import ru.otus.lesson19.model.Genre;
 import java.util.List;
-import java.util.Optional;
 
 public interface LibraryService {
 

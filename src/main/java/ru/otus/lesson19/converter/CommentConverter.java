@@ -11,7 +11,7 @@ import ru.otus.lesson19.model.Comment;
 public class CommentConverter {
 
     public CommentDto entityToDto(Comment comment) {
-        return new CommentDto(comment.getId(), comment.getBook(),comment.getAuthorName(), comment.getComment());
+        return new CommentDto(comment.getId(), comment.getBook().getName(),comment.getAuthorName(), comment.getComment());
     }
 
 }
