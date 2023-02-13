@@ -39,5 +39,4 @@ public class Book {
             updatable = false, insertable = false)
     private List<Comment> comments;
 
-
 }

@@ -1,10 +1,7 @@
 package ru.otus.lesson19.dto;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import ru.otus.lesson19.model.Author;
 import ru.otus.lesson19.model.Genre;
 
@@ -15,6 +12,6 @@ import ru.otus.lesson19.model.Genre;
 public class BookDto {
     private Long id;
     private String name;
-    private String author;
-    private String genre;
+    private Long author;
+    private Long genre;
 }

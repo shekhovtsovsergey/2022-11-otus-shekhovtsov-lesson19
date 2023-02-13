@@ -11,7 +11,7 @@ import ru.otus.lesson19.model.Book;
 public class BookConverter {
 
     public BookDto entityToDto(Book book) {
-        return new BookDto(book.getId(), book.getName(),book.getAuthor().getName(),book.getGenre().getName());
+        return new BookDto(book.getId(), book.getName(),book.getAuthor().getId(),book.getGenre().getId());
     }
 
 }

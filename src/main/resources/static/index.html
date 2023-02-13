@@ -1,46 +1,49 @@
 <!doctype html>
-
-<html ng-app="market">
-
+<html ng-app="market" lang="ru">
 <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/css/bootstrap.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.11/ngStorage.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular-route.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-route/1.8.3/angular-route.min.js"></script>
 </head>
-
 <body>
 
-<div class="container" ng-controller="indexController">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="#!/welcome">Главная страница</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#!/store">Список книг</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#!/create">Добавить книгу</a>
-                </li>
-            </ul>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <app-navbar></app-navbar>
         </div>
-    </nav>
-
-    <ng-view></ng-view>
-
-    <script src="index.js"></script>
-    <script src="store/store.js"></script>
-    <script src="cart/cart.js"></script>
-    <script src="welcome/welcome.js"></script>
-    <script src="update/update.js"></script>
-    <script src="create/create.js"></script>
-
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <ng-view></ng-view>
+        </div>
+    </div>
 </div>
+
+
+<script src="app/index.js"></script>
+<script src="app/services/api.service.js"></script>
+<script src="app/components/navbar/navbar.component.js"></script>
+
+<script src="app/features/books/books.module.js"></script>
+<script src="app/features/books/components/book-comments/book-comments.component.js"></script>
+<script src="app/features/books/components/book-edit/book-edit.component.js"></script>
+<script src="app/features/books/components/book-create/book-create.component.js"></script>
+
+<script src="app/features/store/store.module.js"></script>
+<script src="app/features/store/components/store/store.component.js"></script>
+
+<script src="app/features/welcome/welcome.module.js"></script>
+<script src="app/features/welcome/components/welcome/welcome.component.js"></script>
+
+
+
 </body>
 </html>

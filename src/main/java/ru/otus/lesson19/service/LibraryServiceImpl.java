@@ -53,8 +53,15 @@ public class LibraryServiceImpl implements LibraryService {
     }
 
     @Override
+    @Transactional
     public BookDto updateBook(Long id, String name, Long authorId, Long genreId) {
-        return bookConverter.entityToDto(bookDao.save(new Book(id,name, new Author(authorId,null), new Genre(genreId,null),null)));
+        Author author = new Author(authorId,"hello");
+        Genre genre = new Genre(genreId,"hello");
+        Book book = new Book(id,name,author,genre,null);
+        authorDao.save(author);
+        genreDao.save(genre);
+        bookDao.save(book);
+        return bookConverter.entityToDto(bookDao.findBookById(id));
     }
 
     @Override
