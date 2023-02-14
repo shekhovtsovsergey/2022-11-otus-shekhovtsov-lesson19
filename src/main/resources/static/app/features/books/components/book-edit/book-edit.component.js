@@ -32,11 +32,11 @@
             }
 
             ApiService.updateBook($ctrl.book).then(() => {
-                $location.path('#!/store');
+                $location.path('/store');
             }).catch((error) => {
                 console.error('error', error);
 
-                alert('Error: ' + error.message);
+                alert('Error: ' + error.message || 'unknown error');
             });
         };
     }

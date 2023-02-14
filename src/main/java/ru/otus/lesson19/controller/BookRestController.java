@@ -38,11 +38,6 @@ public class BookRestController {
         return libraryService.getBookById(id);
     }
 
-    @PostMapping("/book")
-    public String createBook(String name, Long authorId, Long genreId) {
-        libraryService.createBook(name, authorId, genreId);
-        return "redirect:/book/";
-    }
 
 
     @GetMapping("/book/{id}")
@@ -63,6 +58,13 @@ public class BookRestController {
 
     @PutMapping("/book/{id}")
     public BookDto updateBook(@RequestBody BookDto bookDto) {
-        return libraryService.updateBook(bookDto.getId(),bookDto.getName(),libraryService.getAuthorById(bookDto.getAuthor()).getId(),libraryService.getGenreById(bookDto.getGenre()).getId());
+        return libraryService.updateBook(bookDto);
     }
+
+    @PostMapping("/book")
+    public BookDto createBook(@RequestBody BookDto bookDto) {
+        return libraryService.createBook(bookDto);
+    }
+
+
 }

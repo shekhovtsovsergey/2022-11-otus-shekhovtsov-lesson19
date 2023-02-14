@@ -11,8 +11,8 @@ public interface LibraryService {
 
     List<BookDto> getAllBooks();
     void deleteBookById(Long id);
-    BookDto createBook(String name, Long authorId, Long genreId);
-    BookDto updateBook(Long id, String name, Long authorId, Long genreId);
+    BookDto createBook(BookDto bookDto);
+    BookDto updateBook(BookDto bookDto);
     BookDto getBookById(Long id);
     List<CommentDto> getAllCommentsByBook(Long id);
     List<AuthorDto> getAllAuthore();

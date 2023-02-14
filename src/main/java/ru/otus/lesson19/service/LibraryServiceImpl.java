@@ -20,6 +20,7 @@ import ru.otus.lesson19.model.Author;
 import ru.otus.lesson19.model.Book;
 import ru.otus.lesson19.model.Genre;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,20 +49,24 @@ public class LibraryServiceImpl implements LibraryService {
     }
 
     @Override
-    public BookDto createBook(String name, Long authorId, Long genreId) {
-        return bookConverter.entityToDto(bookDao.save(new Book(null,name, new Author(authorId,null), new Genre(genreId,null),null)));
+    @Transactional
+    public BookDto createBook(BookDto bookDto) {
+        Author author = authorDao.findAuthorById(bookDto.getAuthor());
+        Genre genre = genreDao.findGenreById(bookDto.getGenre());
+        Book book = new Book(null, bookDto.getName(), author, genre, null);
+        return bookConverter.entityToDto(bookDao.save(book));
     }
 
     @Override
     @Transactional
-    public BookDto updateBook(Long id, String name, Long authorId, Long genreId) {
-        Author author = new Author(authorId,"hello");
-        Genre genre = new Genre(genreId,"hello");
-        Book book = new Book(id,name,author,genre,null);
+    public BookDto updateBook(BookDto bookDto) {
+        Author author = authorDao.findAuthorById(bookDto.getAuthor());
+        Genre genre = genreDao.findGenreById(bookDto.getGenre());
+        Book book = new Book(bookDto.getId(), bookDto.getName(), author, genre, null);
         authorDao.save(author);
         genreDao.save(genre);
         bookDao.save(book);
-        return bookConverter.entityToDto(bookDao.findBookById(id));
+        return bookConverter.entityToDto(bookDao.findBookById(bookDto.getId()));
     }
 
     @Override

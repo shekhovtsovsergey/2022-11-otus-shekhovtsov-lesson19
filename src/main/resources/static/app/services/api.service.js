@@ -21,7 +21,7 @@
                 });
             },
             updateBook: (book) => {
-                return $http.put(CONTEXT_PATH_BOOK + '/' + id).then((response) => {
+                return $http.put(CONTEXT_PATH_BOOK + '/' + book.id, book).then((response) => {
                     return response.data;
                 });
             },
