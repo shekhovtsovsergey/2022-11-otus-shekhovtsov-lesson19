@@ -18,12 +18,12 @@ public class BookRestController {
     private final BookConverter bookConverter;
 
 
-    @GetMapping("/authore")
+    @GetMapping("/authors")
     public List<AuthorDto> getAuthoreList() {
         return libraryService.getAllAuthore();
     }
 
-    @GetMapping("/genre")
+    @GetMapping("/genres")
     public List<GenreDto> getGenreList() {
         return libraryService.getAllGenre();
     }
@@ -37,8 +37,6 @@ public class BookRestController {
     public BookDto getBookInfoById(@PathVariable(name = "id") Long id) {
         return libraryService.getBookById(id);
     }
-
-
 
     @GetMapping("/book/{id}")
     public BookDto getBookById(@PathVariable(name = "id") Long id) {
