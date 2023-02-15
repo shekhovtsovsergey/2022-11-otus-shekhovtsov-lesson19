@@ -1,20 +1,41 @@
 (() => {
     'use strict';
 
-    function BookCreateController(ApiService, $rootScope, $http, $scope, $location, $localStorage) {
+    function BookCreateController(ApiService, $q, $location) {
         const $ctrl = this;
+        $ctrl.book = {};
+        $ctrl.bookForm = undefined;
 
-        const contextPath = 'http://localhost:8189/';
-        const coreContextPath = 'http://localhost:8080/';
+        $ctrl.$onInit = () => {
+            const getGenresPromise = ApiService.getGenres();
+            const getAuthorsPromise = ApiService.getAuthors();
 
-        $rootScope.create = function () {
-            $http.get(contextPath + 'api/v1/book/' + $localStorage.productHtml + '/comment').then(function (response) {
-                $rootScope.cart = response.data;
+            $q.all({
+                genres: getGenresPromise,
+                authors: getAuthorsPromise,
+            }).then((result) => {
+                $ctrl.genres = result.genres;
+                $ctrl.authors = result.authors;
             });
         };
 
-        ApiService.loadCart();
+        $ctrl.submitForm = () => {
+            if ($ctrl.bookForm.$invalid) {
+                alert('INVALID FORM');
+                return;
+            }
+
+            ApiService.createBook($ctrl.book).then(() => {
+                $location.path('/store');
+            }).catch((error) => {
+                console.error('error', error);
+
+                alert('Error: ' + error.message || 'unknown error');
+            });
+        };
     }
+
+    BookCreateController.$inject = ['ApiService', '$q', '$location'];
 
     angular
         .module('market.books')

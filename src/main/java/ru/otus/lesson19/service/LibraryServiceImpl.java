@@ -20,7 +20,6 @@ import ru.otus.lesson19.model.Author;
 import ru.otus.lesson19.model.Book;
 import ru.otus.lesson19.model.Genre;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,9 +42,10 @@ public class LibraryServiceImpl implements LibraryService {
 
     @Override
     @Transactional
-    public void deleteBookById(Long id) {
+    public List<BookDto> deleteBookById(Long id) {
         commentDao.deleteByBook(new Book(id,null,null,null,null));
         bookDao.deleteById(id);
+        return bookDao.findAll().stream().map(bookConverter::entityToDto).collect(Collectors.toList());
     }
 
     @Override

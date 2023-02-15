@@ -21,8 +21,8 @@
                 <tr ng-repeat="book in $ctrl.bookList">
                     <td>{{book.id}}</td>
                     <td>{{book.name}}</td>
-                    <td>{{book.author}}</td>
-                    <td>{{book.genre}}</td>
+                    <td>{{book.author | myKeyValue:$ctrl.authors}}</td>
+                    <td>{{book.genre | myKeyValue:$ctrl.genres}}</td>
                     <td>
                         <a class="btn btn-link" ng-href="{{'#!/store/'+book.id+'/comments'}}">Комментарии</a>
                     </td>

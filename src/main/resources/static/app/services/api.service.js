@@ -25,6 +25,11 @@
                     return response.data;
                 });
             },
+            createBook: (book) => {
+                return $http.post(CONTEXT_PATH_BOOK, book).then((response) => {
+                    return response.data;
+                });
+            },
             getBook: (id) => {
                 return $http.get(CONTEXT_PATH_BOOK + '/' + id).then((response) => {
                     return response.data;

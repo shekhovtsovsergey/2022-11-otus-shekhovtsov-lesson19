@@ -3,9 +3,10 @@
 
     function BookEditController(ApiService, $routeParams, $q, $location) {
         const $ctrl = this;
-        $ctrl.books = [];
         $ctrl.book = undefined;
         $ctrl.bookForm = undefined;
+        $ctrl.genres = [];
+        $ctrl.authors = [];
 
         $ctrl.$onInit = () => {
             $ctrl.id = $routeParams.id;

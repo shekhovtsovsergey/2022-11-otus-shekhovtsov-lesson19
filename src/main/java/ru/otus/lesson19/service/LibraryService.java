@@ -10,7 +10,7 @@ import java.util.List;
 public interface LibraryService {
 
     List<BookDto> getAllBooks();
-    void deleteBookById(Long id);
+    List<BookDto> deleteBookById(Long id);
     BookDto createBook(BookDto bookDto);
     BookDto updateBook(BookDto bookDto);
     BookDto getBookById(Long id);
