@@ -4,24 +4,21 @@ package ru.otus.lesson19.model;
 import lombok.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-
 import javax.persistence.*;
 
 @Entity
 @Table(name = "comments")
-@Getter
-@Setter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@NamedEntityGraph(name = "Comments-bookId", attributeNodes = @NamedAttributeNode("book"))
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne()
-    @Fetch(value = FetchMode.JOIN)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "book_id", referencedColumnName = "id",
             foreignKey = @ForeignKey(name = "fk_books_comments"),
             nullable = false)

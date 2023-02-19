@@ -36,12 +36,12 @@
                 });
             },
             getAuthors: () => {
-                return $http.get(CONTEXT_PATH + '/authors').then((response) => {
+                return $http.get(CONTEXT_PATH + '/author').then((response) => {
                     return response.data;
                 });
             },
             getGenres: () => {
-                return $http.get(CONTEXT_PATH + '/genres').then((response) => {
+                return $http.get(CONTEXT_PATH + '/genre').then((response) => {
                     return response.data;
                 });
             },

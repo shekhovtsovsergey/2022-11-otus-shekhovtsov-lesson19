@@ -2,66 +2,63 @@ package ru.otus.lesson19.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.otus.lesson19.converter.BookConverter;
 import ru.otus.lesson19.dto.AuthorDto;
 import ru.otus.lesson19.dto.BookDto;
 import ru.otus.lesson19.dto.CommentDto;
 import ru.otus.lesson19.dto.GenreDto;
-import ru.otus.lesson19.service.LibraryService;
+import ru.otus.lesson19.service.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping
 @RequiredArgsConstructor
 public class BookRestController {
-    private final LibraryService libraryService;
-    private final BookConverter bookConverter;
+
+    private final AuthorService authorService;
+    private final GenreService genreService;
+    private final CommentService commentService;
+    private final BookService bookService;
 
 
-    @GetMapping("/authors")
+    @GetMapping("/api/v1/author")
     public List<AuthorDto> getAuthoreList() {
-        return libraryService.getAllAuthore();
+        return authorService.getAllAuthore();
     }
 
-    @GetMapping("/genres")
+    @GetMapping("/api/v1/genre")
     public List<GenreDto> getGenreList() {
-        return libraryService.getAllGenre();
+        return genreService.getAllGenre();
     }
 
-    @GetMapping("/book")
+    @GetMapping("/api/v1/book")
     public List<BookDto> getBookList() {
-        return libraryService.getAllBooks();
+        return bookService.getAllBooks();
     }
 
-    @GetMapping("/book/{id}/info")
-    public BookDto getBookInfoById(@PathVariable(name = "id") Long id) {
-        return libraryService.getBookById(id);
+    @GetMapping("/api/v1/book/{id}")
+    public Object getBookById(@PathVariable(name = "id") Long id) {
+        return bookService.getBookById(id);
     }
 
-    @GetMapping("/book/{id}")
-    public BookDto getBookById(@PathVariable(name = "id") Long id) {
-        return libraryService.getBookById(id);
-    }
-
-    @DeleteMapping("/book/{id}")
+    @DeleteMapping("/api/v1/book/{id}")
     public List<BookDto> deleteBookById(@PathVariable(name = "id") Long id) {
-        libraryService.deleteBookById(id);
-        return libraryService.getAllBooks();
+        bookService.deleteBookById(id);
+        return bookService.getAllBooks();
     }
 
-    @GetMapping("/book/{id}/comment")
+    @GetMapping("/api/v1/book/{id}/comment")
     public List<CommentDto> getCommentList(@PathVariable(name = "id") Long id) {
-        return libraryService.getAllCommentsByBook(id);
+        return commentService.getAllCommentsByBook(id);
     }
 
-    @PutMapping("/book/{id}")
+    @PutMapping("/api/v1/book/{id}")
     public BookDto updateBook(@RequestBody BookDto bookDto) {
-        return libraryService.updateBook(bookDto);
+        return bookService.updateBook(bookDto);
     }
 
-    @PostMapping("/book")
+    @PostMapping("/api/v1/book")
     public BookDto createBook(@RequestBody BookDto bookDto) {
-        return libraryService.createBook(bookDto);
+        return bookService.createBook(bookDto);
     }
 
 

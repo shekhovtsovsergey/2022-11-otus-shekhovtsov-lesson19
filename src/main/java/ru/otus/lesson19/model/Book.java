@@ -2,19 +2,17 @@ package ru.otus.lesson19.model;
 
 
 import lombok.*;
-import org.hibernate.annotations.BatchSize;
-import ru.otus.lesson19.dto.BookDto;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "books")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@NamedEntityGraph(name = "Book.allAttributes", includeAllAttributes = true)
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,20 +21,16 @@ public class Book {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", nullable = false)
     private Author author;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "genre_id", nullable = false)
     private Genre genre;
 
 
-    @OneToMany()
-    @BatchSize(size = 20)
-    @JoinColumn(name = "book_id", referencedColumnName = "id",
-            foreignKey = @ForeignKey(name = "fk_book_comment"),
-            updatable = false, insertable = false)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "book")
+    @Fetch(FetchMode.SUBSELECT)
     private List<Comment> comments;
-
 }

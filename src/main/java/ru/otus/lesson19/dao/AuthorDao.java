@@ -6,6 +6,5 @@ import ru.otus.lesson19.model.Author;
 
 public interface AuthorDao extends JpaRepository<Author, Long> {
 
-    Author findAuthorById(Long id);
 
 }
