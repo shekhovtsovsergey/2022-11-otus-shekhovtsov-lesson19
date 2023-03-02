@@ -1,34 +1,20 @@
 package ru.otus.lesson19.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.otus.lesson19.dto.AuthorDto;
 import ru.otus.lesson19.dto.BookDto;
-import ru.otus.lesson19.dto.CommentDto;
-import ru.otus.lesson19.dto.GenreDto;
+import ru.otus.lesson19.exception.BookNotFoundException;
 import ru.otus.lesson19.service.*;
 import java.util.List;
 
 @RestController
-@RequestMapping
 @RequiredArgsConstructor
+@Slf4j
 public class BookRestController {
 
-    private final AuthorService authorService;
-    private final GenreService genreService;
-    private final CommentService commentService;
     private final BookService bookService;
-
-
-    @GetMapping("/api/v1/author")
-    public List<AuthorDto> getAuthoreList() {
-        return authorService.getAllAuthore();
-    }
-
-    @GetMapping("/api/v1/genre")
-    public List<GenreDto> getGenreList() {
-        return genreService.getAllGenre();
-    }
 
     @GetMapping("/api/v1/book")
     public List<BookDto> getBookList() {
@@ -36,19 +22,13 @@ public class BookRestController {
     }
 
     @GetMapping("/api/v1/book/{id}")
-    public Object getBookById(@PathVariable(name = "id") Long id) {
+    public BookDto getBookById(@PathVariable(name = "id") Long id) throws BookNotFoundException {
         return bookService.getBookById(id);
     }
 
     @DeleteMapping("/api/v1/book/{id}")
-    public List<BookDto> deleteBookById(@PathVariable(name = "id") Long id) {
+    public void deleteBookById(@PathVariable(name = "id") Long id) {
         bookService.deleteBookById(id);
-        return bookService.getAllBooks();
-    }
-
-    @GetMapping("/api/v1/book/{id}/comment")
-    public List<CommentDto> getCommentList(@PathVariable(name = "id") Long id) {
-        return commentService.getAllCommentsByBook(id);
     }
 
     @PutMapping("/api/v1/book/{id}")
@@ -61,5 +41,9 @@ public class BookRestController {
         return bookService.createBook(bookDto);
     }
 
-
+    @ExceptionHandler({BookNotFoundException.class})
+    private ResponseEntity<String> handleNotFound(Exception e) {
+        log.error(e.getMessage());
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
 }

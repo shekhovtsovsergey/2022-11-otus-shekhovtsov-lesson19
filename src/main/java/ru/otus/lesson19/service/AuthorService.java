@@ -6,6 +6,5 @@ import java.util.List;
 public interface AuthorService {
 
     List<AuthorDto> getAllAuthore();
-    Object getAuthorById(Long id);
 
 }

@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8189
 spring:
   datasource:
     driver-class-name: org.h2.Driver
@@ -15,3 +15,4 @@ spring:
   jpa:
     spring.jpa.database-platform: org.hibernate.dialect.PostgreSQL
     show-sql: true
+    open-in-view: false

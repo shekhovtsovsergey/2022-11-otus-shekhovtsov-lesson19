@@ -1,7 +1,7 @@
 package ru.otus.lesson19.service;
 
-
 import ru.otus.lesson19.dto.BookDto;
+import ru.otus.lesson19.exception.BookNotFoundException;
 import java.util.List;
 
 public interface BookService {
@@ -10,6 +10,6 @@ public interface BookService {
     List<BookDto> deleteBookById(Long id);
     BookDto createBook(BookDto bookDto);
     BookDto updateBook(BookDto bookDto);
-    Object getBookById(Long id);
+    BookDto getBookById(Long id) throws BookNotFoundException;
 
 }

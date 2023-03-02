@@ -1,10 +1,7 @@
 package ru.otus.lesson19.service;
 
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.lesson19.converter.BookConverter;
@@ -13,7 +10,7 @@ import ru.otus.lesson19.dao.BookDao;
 import ru.otus.lesson19.dao.CommentDao;
 import ru.otus.lesson19.dao.GenreDao;
 import ru.otus.lesson19.dto.BookDto;
-import ru.otus.lesson19.exception.NotFoundException;
+import ru.otus.lesson19.exception.BookNotFoundException;
 import ru.otus.lesson19.model.Author;
 import ru.otus.lesson19.model.Book;
 import ru.otus.lesson19.model.Genre;
@@ -65,12 +62,7 @@ public class BookServiceImpl implements BookService{
 
 
     @Override
-    public Object getBookById(Long id) {
-        try {
-            return bookConverter.entityToDto(bookDao.findById(id).orElseThrow(NotFoundException::new));
-        } catch (NotFoundException e) {
-            log.error("Book not found id={}", id);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+    public BookDto getBookById(Long id) throws BookNotFoundException {
+        return bookConverter.entityToDto(bookDao.findById(id).orElseThrow(() -> new BookNotFoundException(id)));
     }
 }

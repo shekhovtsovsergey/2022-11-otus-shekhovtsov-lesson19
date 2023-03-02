@@ -1,12 +1,13 @@
 package ru.otus.lesson19.service;
 
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.lesson19.converter.CommentConverter;
 import ru.otus.lesson19.dao.BookDao;
 import ru.otus.lesson19.dto.CommentDto;
+import ru.otus.lesson19.exception.BookNotFoundException;;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,11 +19,9 @@ public class CommentServiceImpl implements CommentService{
     private final BookDao bookDao;
     private final CommentConverter commentConverter;
 
-
     @Override
-    public List<CommentDto> getAllCommentsByBook(Long id) {
-        return  bookDao.findById(id).orElse(null).getComments().stream().map(commentConverter::entityToDto).collect(Collectors.toList());
+    @Transactional
+    public List<CommentDto> getAllCommentsByBook(Long id) throws BookNotFoundException {
+        return  bookDao.findById(id).orElseThrow(() -> new BookNotFoundException(id)).getComments().stream().map(commentConverter::entityToDto).collect(Collectors.toList());
     }
-
-
 }

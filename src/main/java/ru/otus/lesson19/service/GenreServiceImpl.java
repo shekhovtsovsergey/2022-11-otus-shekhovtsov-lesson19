@@ -1,15 +1,12 @@
 package ru.otus.lesson19.service;
 
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.otus.lesson19.converter.GenreConverter;
 import ru.otus.lesson19.dao.GenreDao;
 import ru.otus.lesson19.dto.GenreDto;
-import ru.otus.lesson19.exception.NotFoundException;
+import ru.otus.lesson19.exception.GenreNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,13 +23,7 @@ public class GenreServiceImpl implements GenreService{
     }
 
     @Override
-    public Object getGenreById(Long id) {
-        try {
-            return genreConverter.entityToDto(genreDao.findById(id).orElseThrow(NotFoundException::new));
-        } catch (NotFoundException e) {
-            log.error("Genre not found id={}", id);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
+    public GenreDto getGenreById(Long id) throws GenreNotFoundException {
+            return genreConverter.entityToDto(genreDao.findById(id).orElseThrow(() -> new GenreNotFoundException(id)));
     }
 }
