@@ -4,32 +4,25 @@ package ru.otus.lesson19.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
-import org.junit.Before;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.otus.lesson19.dao.BookDao;
 import ru.otus.lesson19.dto.BookDto;
 import ru.otus.lesson19.exception.BookNotFoundException;
 import ru.otus.lesson19.service.AuthorService;
 import ru.otus.lesson19.service.BookService;
 import ru.otus.lesson19.service.CommentService;
 import ru.otus.lesson19.service.GenreService;
-
 import java.util.Arrays;
 import java.util.List;
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -54,29 +47,17 @@ public class BookRestControllerTest {
     @MockBean
     private CommentService commentService;
 
-
     @Test
     @DisplayName("должен уметь создавать книгу")
     public void createBook_ReturnBook() throws Exception {
-
-        String bookInJson = "{\"id\": 1, \"name\": \"Ned ad\",\"author\": 1,\"genre\": 1}";
-
-        BookDto expectedBook = BookDto.builder().id(1L).name("Ned ad").author(1L).genre(1L).build();
-        //given(bookService.createBook(bookInJson)).willReturn(bookInJson);
-       // given(bookDao.save(expectedBook)).willReturn(expectedBook);
-        when(bookService.createBook(expectedBook)).thenReturn(expectedBook);
-
+        BookDto bookDto = new BookDto(1L,"Book1",1L,1L);
+        given(bookService.createBook(bookDto)).willReturn(bookDto);
         mockMvc.perform(post("/api/v1/book")
-                        .content(bookInJson)
-                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                        )
-                .andDo(print())
+                        .contentType("application/json")
+                        .content("{\"id\": 1, \"name\": \"Book1\",\"author\": 1,\"genre\": 1}"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.name").value("Book1"));
-
-
-        verify(bookService).createBook(expectedBook);
+                .andExpect(jsonPath("$.name", is("Book1")));
+        verify(bookService).createBook(bookDto);
     }
 
 
@@ -121,7 +102,6 @@ public class BookRestControllerTest {
     public void getBookById_ReturnBook() throws Exception {
         BookDto expectedBook = BookDto.builder().id(1L).name("Book1").build();
         given(bookService.getBookById(1L)).willReturn(expectedBook);
-
         mockMvc.perform(get("/api/v1/book/1"))
                 .andDo(print())
                 .andExpect(status().isOk())

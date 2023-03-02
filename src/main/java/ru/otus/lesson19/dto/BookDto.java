@@ -3,8 +3,7 @@ package ru.otus.lesson19.dto;
 
 import lombok.*;
 
-@Getter
-@Setter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
