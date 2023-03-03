@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface GenreService {
 
-    List<GenreDto> getAllGenre();
+    List<GenreDto> getAllGenre() throws GenreNotFoundException;
     GenreDto getGenreById(Long id) throws GenreNotFoundException;
 
 

@@ -18,7 +18,7 @@ public class GenreServiceImpl implements GenreService{
     private final GenreDao genreDao;
     private final GenreConverter genreConverter;
 
-    public List<GenreDto> getAllGenre() {
+    public List<GenreDto> getAllGenre() throws GenreNotFoundException {
         return genreDao.findAll().stream().map(genreConverter::entityToDto).collect(Collectors.toList());
     }
 

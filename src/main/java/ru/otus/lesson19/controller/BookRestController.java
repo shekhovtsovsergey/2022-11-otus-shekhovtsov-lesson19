@@ -5,7 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.otus.lesson19.dto.BookDto;
+import ru.otus.lesson19.exception.AuthorNotFoundException;
 import ru.otus.lesson19.exception.BookNotFoundException;
+import ru.otus.lesson19.exception.GenreNotFoundException;
 import ru.otus.lesson19.service.*;
 import java.util.List;
 
@@ -32,16 +34,16 @@ public class BookRestController {
     }
 
     @PutMapping("/api/v1/book/{id}")
-    public BookDto updateBook(@RequestBody BookDto bookDto) {
+    public BookDto updateBook(@RequestBody BookDto bookDto) throws AuthorNotFoundException, GenreNotFoundException {
         return bookService.updateBook(bookDto);
     }
 
     @PostMapping("/api/v1/book")
-    public BookDto createBook(@RequestBody BookDto bookDto) {
+    public BookDto createBook(@RequestBody BookDto bookDto) throws AuthorNotFoundException, GenreNotFoundException {
         return bookService.createBook(bookDto);
     }
 
-    @ExceptionHandler({BookNotFoundException.class})
+    @ExceptionHandler({BookNotFoundException.class,AuthorNotFoundException.class,GenreNotFoundException.class})
     private ResponseEntity<String> handleNotFound(Exception e) {
         log.error(e.getMessage());
         return ResponseEntity.badRequest().body(e.getMessage());

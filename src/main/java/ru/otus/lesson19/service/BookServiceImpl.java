@@ -10,7 +10,9 @@ import ru.otus.lesson19.dao.BookDao;
 import ru.otus.lesson19.dao.CommentDao;
 import ru.otus.lesson19.dao.GenreDao;
 import ru.otus.lesson19.dto.BookDto;
+import ru.otus.lesson19.exception.AuthorNotFoundException;
 import ru.otus.lesson19.exception.BookNotFoundException;
+import ru.otus.lesson19.exception.GenreNotFoundException;
 import ru.otus.lesson19.model.Author;
 import ru.otus.lesson19.model.Book;
 import ru.otus.lesson19.model.Genre;
@@ -44,18 +46,18 @@ public class BookServiceImpl implements BookService{
 
     @Override
     @Transactional
-    public BookDto createBook(BookDto bookDto) {
-        Author author = authorDao.findById(bookDto.getAuthor()).orElse(null);
-        Genre genre = genreDao.findById(bookDto.getGenre()).orElse(null);
+    public BookDto createBook(BookDto bookDto) throws AuthorNotFoundException, GenreNotFoundException {
+        Author author = authorDao.findById(bookDto.getAuthor()).orElseThrow(() -> new AuthorNotFoundException(bookDto.getAuthor()));
+        Genre genre = genreDao.findById(bookDto.getGenre()).orElseThrow(() -> new GenreNotFoundException(bookDto.getGenre()));
         Book book = new Book(null, bookDto.getName(), author, genre, null);
         return bookConverter.entityToDto(bookDao.save(book));
     }
 
     @Override
     @Transactional
-    public BookDto updateBook(BookDto bookDto){
-        Author author = authorDao.findById(bookDto.getAuthor()).orElse(null);
-        Genre genre = genreDao.findById(bookDto.getGenre()).orElse(null);
+    public BookDto updateBook(BookDto bookDto) throws AuthorNotFoundException, GenreNotFoundException {
+        Author author = authorDao.findById(bookDto.getAuthor()).orElseThrow(() -> new AuthorNotFoundException(bookDto.getAuthor()));
+        Genre genre = genreDao.findById(bookDto.getGenre()).orElseThrow(() -> new GenreNotFoundException(bookDto.getGenre()));
         Book book = new Book(bookDto.getId(), bookDto.getName(), author, genre, null);
         return bookConverter.entityToDto(bookDao.save(book));
     }

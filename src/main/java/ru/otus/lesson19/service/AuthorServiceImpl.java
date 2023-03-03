@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import ru.otus.lesson19.converter.AuthorConverter;
 import ru.otus.lesson19.dao.AuthorDao;
 import ru.otus.lesson19.dto.AuthorDto;
+import ru.otus.lesson19.exception.AuthorNotFoundException;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,7 +20,7 @@ public class AuthorServiceImpl implements AuthorService{
     private final AuthorConverter authorConverter;
 
     @Override
-    public List<AuthorDto> getAllAuthore() {
+    public List<AuthorDto> getAllAuthore() throws AuthorNotFoundException {
         return authorDao.findAll().stream().map(authorConverter::entityToDto).collect(Collectors.toList());
     }
 

@@ -19,7 +19,7 @@ public class GenreRestController {
     private final GenreService genreService;
 
     @GetMapping("/api/v1/genre")
-    public List<GenreDto> getGenreList() {
+    public List<GenreDto> getGenreList() throws GenreNotFoundException {
         return genreService.getAllGenre();
     }
 

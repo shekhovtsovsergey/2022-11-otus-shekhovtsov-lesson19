@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @WebMvcTest
-@DisplayName("Контроллер библиотеки должен")
+@DisplayName("Контроллер библиотеки")
 public class BookRestControllerTest {
 
     @Autowired
@@ -62,6 +62,7 @@ public class BookRestControllerTest {
 
 
     @Test
+    @DisplayName("должен уметь обновлять книгу")
     public void updateBook_ReturnBook() throws Exception {
         BookDto expectedBook = BookDto.builder().id(1L).name("Book1").build();
         given(bookService.updateBook(expectedBook)).willReturn(expectedBook);
@@ -77,6 +78,7 @@ public class BookRestControllerTest {
 
 
     @Test
+    @DisplayName("должен уметь получать список книг")
     public void getBookList_ReturnBookList() throws Exception {
         List<BookDto> expectedBookList = Arrays.asList(
                 BookDto.builder().id(1L).name("Book1").build(),
@@ -99,6 +101,7 @@ public class BookRestControllerTest {
 
 
     @Test
+    @DisplayName("должен уметь получать книг по id")
     public void getBookById_ReturnBook() throws Exception {
         BookDto expectedBook = BookDto.builder().id(1L).name("Book1").build();
         given(bookService.getBookById(1L)).willReturn(expectedBook);
@@ -107,12 +110,12 @@ public class BookRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.name").value("Book1"));
-
         verify(bookService).getBookById(1L);
     }
 
 
     @Test
+    @DisplayName("должен уметь удалять книгу по id")
     public void deleteBookById_ReturnVoid() throws Exception {
         mockMvc.perform(delete("/api/v1/book/1"))
                 .andExpect(status().isOk());
@@ -120,16 +123,15 @@ public class BookRestControllerTest {
     }
 
 
-
     @Test
+    @DisplayName("должен уметь ловить ошибки и возвращать бэд-реквест")
     public void handleNotFound_ReturnBadRequest() throws Exception {
-        given(bookService.getBookById(1L)).willThrow(new BookNotFoundException("Book Not Found"));
+        given(bookService.getBookById(1L)).willThrow(new BookNotFoundException("Book Not Found, check your request"));
         mockMvc.perform(get("/api/v1/book/1"))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("Book Not Found"));
+                .andExpect(content().string("Book Not Found, check your request"));
         verify(bookService).getBookById(1L);
     }
-
 
 
     private String toJsonString(Object object) {
