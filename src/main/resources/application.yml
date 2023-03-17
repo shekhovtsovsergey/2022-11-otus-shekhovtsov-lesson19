@@ -19,5 +19,3 @@ spring:
   mail:
     host: smtp.rambler.ru
     port: 587
-    username: medappsuppor
-    password: WE37NBqfphPeZWXMXYOmKcbILmd7dr
