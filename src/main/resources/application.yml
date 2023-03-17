@@ -16,6 +16,3 @@ spring:
     spring.jpa.database-platform: org.hibernate.dialect.PostgreSQL
     show-sql: true
     open-in-view: false
-  mail:
-    host: smtp.rambler.ru
-    port: 587

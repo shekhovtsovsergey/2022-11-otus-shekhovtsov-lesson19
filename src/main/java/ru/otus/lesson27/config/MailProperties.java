@@ -11,4 +11,6 @@ public class MailProperties {
     public static final String PREFIX = "mail";
     private String username;
     private String password;
+    private String host;
+    private int port;
 }
