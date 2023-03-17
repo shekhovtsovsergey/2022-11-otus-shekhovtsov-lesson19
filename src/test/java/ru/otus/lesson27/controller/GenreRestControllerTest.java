@@ -7,13 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.lesson27.dto.GenreDto;
 import ru.otus.lesson27.exception.GenreNotFoundException;
-import ru.otus.lesson27.service.AuthorService;
-import ru.otus.lesson27.service.BookService;
-import ru.otus.lesson27.service.CommentService;
-import ru.otus.lesson27.service.GenreService;
+import ru.otus.lesson27.service.*;
 import java.util.Arrays;
 import java.util.List;
 import static org.mockito.BDDMockito.given;
@@ -30,7 +28,6 @@ public class GenreRestControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
     @MockBean
     private BookService bookService;
     @MockBean
@@ -39,16 +36,17 @@ public class GenreRestControllerTest {
     private GenreService genreService;
     @MockBean
     private CommentService commentService;
-
+    @MockBean
+    private UserService userService;
 
     @Test
+    @WithMockUser(username = "user")
     @DisplayName("должен уметь возвращать список жанров")
     void getGenreList_ShouldReturnAllGenres() throws Exception {
         List<GenreDto> genres = Arrays.asList(
                 new GenreDto(1L, "pop"),
                 new GenreDto(2L, "rock"));
         given(genreService.getAllGenre()).willReturn(genres);
-
         mockMvc.perform(get("/api/v1/genre"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -59,11 +57,18 @@ public class GenreRestControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user")
     @DisplayName("должен уметь ловить ошибки и возвращать бэд-реквест")
     void getGenreList_WhenGenresNotFound_ShouldReturnBadRequest() throws Exception {
         given(genreService.getAllGenre()).willThrow(new GenreNotFoundException("Genres not found, check your request"));
-
         mockMvc.perform(get("/api/v1/genre"))
                 .andExpect(status().isBadRequest());
+    }
+    @Test
+    @DisplayName("должен перенаправлять на страницу аутентификации для доступа к списку жанров")
+    void whenGetGenreList_thenRedirectToAuthenticationPage() throws Exception {
+        mockMvc.perform(get("/api/v1/genre"))
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("http://localhost/login"));
     }
 }

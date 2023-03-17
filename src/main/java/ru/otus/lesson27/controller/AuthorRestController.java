@@ -28,5 +28,4 @@ public class AuthorRestController {
         log.error(e.getMessage());
         return ResponseEntity.badRequest().body(e.getMessage());
     }
-
 }

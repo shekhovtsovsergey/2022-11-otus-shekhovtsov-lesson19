@@ -10,19 +10,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.lesson27.dto.BookDto;
 import ru.otus.lesson27.exception.BookNotFoundException;
-import ru.otus.lesson27.service.AuthorService;
-import ru.otus.lesson27.service.BookService;
-import ru.otus.lesson27.service.CommentService;
-import ru.otus.lesson27.service.GenreService;
+import ru.otus.lesson27.service.*;
+
 import java.util.Arrays;
 import java.util.List;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -46,8 +46,11 @@ public class BookRestControllerTest {
     private GenreService genreService;
     @MockBean
     private CommentService commentService;
+    @MockBean
+    private UserService userService;
 
     @Test
+    @WithMockUser(username = "user")
     @DisplayName("должен уметь создавать книгу")
     public void createBook_ReturnBook() throws Exception {
         BookDto bookDto = new BookDto(1L,"Book1",1L,1L);
@@ -62,6 +65,7 @@ public class BookRestControllerTest {
 
 
     @Test
+    @WithMockUser(username = "user")
     @DisplayName("должен уметь обновлять книгу")
     public void updateBook_ReturnBook() throws Exception {
         BookDto expectedBook = BookDto.builder().id(1L).name("Book1").build();
@@ -78,6 +82,7 @@ public class BookRestControllerTest {
 
 
     @Test
+    @WithMockUser(username = "user")
     @DisplayName("должен уметь получать список книг")
     public void getBookList_ReturnBookList() throws Exception {
         List<BookDto> expectedBookList = Arrays.asList(
@@ -101,6 +106,7 @@ public class BookRestControllerTest {
 
 
     @Test
+    @WithMockUser(username = "user")
     @DisplayName("должен уметь получать книг по id")
     public void getBookById_ReturnBook() throws Exception {
         BookDto expectedBook = BookDto.builder().id(1L).name("Book1").build();
@@ -115,6 +121,7 @@ public class BookRestControllerTest {
 
 
     @Test
+    @WithMockUser(username = "user")
     @DisplayName("должен уметь удалять книгу по id")
     public void deleteBookById_ReturnVoid() throws Exception {
         mockMvc.perform(delete("/api/v1/book/1"))
@@ -124,6 +131,7 @@ public class BookRestControllerTest {
 
 
     @Test
+    @WithMockUser(username = "user")
     @DisplayName("должен уметь ловить ошибки и возвращать бэд-реквест")
     public void handleNotFound_ReturnBadRequest() throws Exception {
         given(bookService.getBookById(1L)).willThrow(new BookNotFoundException("Book Not Found, check your request"));
@@ -131,6 +139,47 @@ public class BookRestControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("Book Not Found, check your request"));
         verify(bookService).getBookById(1L);
+    }
+
+
+    @Test
+    @DisplayName("должен требовать аутентификацию для создания книги")
+    public void createBook_ShouldRequireAuthentication() throws Exception {
+        mockMvc.perform(post("/api/v1/book")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"id\": 1, \"name\": \"Book1\",\"author\": 1,\"genre\": 1}"))
+                .andExpect(redirectedUrl("http://localhost/login"));
+    }
+
+
+    @Test
+    @DisplayName("должен требовать аутентификацию для обновления книги")
+    public void updateBook_ShouldRequireAuthentication() throws Exception {
+        BookDto expectedBook = BookDto.builder().id(1L).name("Book1").build();
+        mockMvc.perform(put("/api/v1/book/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJsonString(expectedBook)))
+                .andExpect(redirectedUrl("http://localhost/login"));
+    }
+
+
+    @Test
+    @DisplayName("должен разрешать доступ к списку книг для пользователя с ролью USER")
+    void whenGetBookListWithUserRole_thenReturnBookList() throws Exception {
+        List<BookDto> bookDtoList = Arrays.asList(new BookDto(), new BookDto());
+        given(bookService.getAllBooks()).willReturn(bookDtoList);
+        mockMvc.perform(get("/api/v1/book").with(user("user").roles("USER")))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)));
+        verify(bookService).getAllBooks();
+    }
+
+
+    @Test
+    @DisplayName("должен запрещать доступ к списку книг для пользователя без роли USER")
+    void whenGetBookListWithoutUserRole_thenForbidden() throws Exception {
+        mockMvc.perform(get("/api/v1/book").with(user("user").roles("ADMIN")))
+                .andExpect(status().isForbidden());
     }
 
 
