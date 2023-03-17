@@ -18,3 +18,9 @@ INSERT INTO COMMENTS (BOOK_ID, AUTHOR_NAME,COMMENT) VALUES (1,DEFAULT,'Скук�
 INSERT INTO COMMENTS (BOOK_ID, AUTHOR_NAME,COMMENT) VALUES (1,DEFAULT,'Скукота');
 INSERT INTO COMMENTS (BOOK_ID, AUTHOR_NAME,COMMENT) VALUES (1,DEFAULT,'Скукота');
 INSERT INTO COMMENTS (BOOK_ID, AUTHOR_NAME,COMMENT) VALUES (1,DEFAULT,'Скукота');
+
+INSERT INTO roles (name) VALUES ('ROLE_USER');
+INSERT INTO roles (name) VALUES ('ROLE_ADMIN');
+
+INSERT INTO users (id, username, email, first_name, last_name, password, created, updated, status) VALUES (1, 'user', 'user@mail.ru', 'sergey', 'she', '$2a$12$XS3Wiu7oEYPuIC6dRB53Wevk0HdZW3Qt8w0wAQofKmwrPiRXqWgV6', '2022-11-20 09:01:07.000000', '2022-11-20 09:01:07.000000', 'ACTIVE');
+INSERT INTO users_roles (user_id, role_id) VALUES (1, 1);

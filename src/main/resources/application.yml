@@ -1,5 +1,5 @@
 server:
-  port: 8189
+  port: 8080
 spring:
   datasource:
     driver-class-name: org.h2.Driver
@@ -16,3 +16,8 @@ spring:
     spring.jpa.database-platform: org.hibernate.dialect.PostgreSQL
     show-sql: true
     open-in-view: false
+  mail:
+    host: smtp.rambler.ru
+    port: 587
+    username: medappsuppor
+    password: WE37NBqfphPeZWXMXYOmKcbILmd7dr

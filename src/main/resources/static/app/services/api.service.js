@@ -1,7 +1,7 @@
 (() => {
     'use strict';
 
-    const BASE_URL = 'http://localhost:8189';
+    const BASE_URL = 'http://localhost:8080';
     const CONTEXT_PATH = `${BASE_URL}/api/v1`;
     const CONTEXT_PATH_BOOK = `${CONTEXT_PATH}/book`;
 
