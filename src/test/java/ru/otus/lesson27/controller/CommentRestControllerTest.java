@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @WebMvcTest
-@DisplayName("Контроллер библиотеки")
+@DisplayName("Контроллер комментариева")
 public class CommentRestControllerTest {
 
     @Autowired

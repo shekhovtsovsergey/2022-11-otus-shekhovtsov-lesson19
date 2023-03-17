@@ -14,11 +14,11 @@ import java.util.Collection;
 import java.util.List;
 
 public interface UserService extends UserDetailsService {
-
     public User findByUsername(String username);
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
     public Collection<? extends GrantedAuthority> mapRolesToAuthorities(List<Role> roles);
     public String registration(UserDto userDto, BindingResult result, Model model);
+    public String showRegistrationForm(Model model);
     public String newPass();
 
 }

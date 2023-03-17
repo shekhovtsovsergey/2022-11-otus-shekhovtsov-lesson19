@@ -34,7 +34,6 @@ public class UserServiceImpl implements UserService {
     private final RoleDao roleDao;
     private final MailService mailService;
 
-
     @Override
     public User findByUsername(String username) {
         return userDao.findByUsername(username);
@@ -56,7 +55,6 @@ public class UserServiceImpl implements UserService {
         return roles.stream().map(r -> new SimpleGrantedAuthority(r.getName())).collect(Collectors.toList());
     }
 
-
     @Override
     @Transactional
     public String registration(UserDto userDto, BindingResult result, Model model){
@@ -73,6 +71,13 @@ public class UserServiceImpl implements UserService {
         userDao.save(user);
         mailService.sendMessage(user.getEmail(),"Registration", "Hello " + user.getUsername() + ", your password is "+ password);
         return "redirect:/login/register?success";
+    }
+
+    @Override
+    public String showRegistrationForm(Model model) {
+        User user = new User();
+        model.addAttribute("user", user);
+        return "register";
     }
 
 
