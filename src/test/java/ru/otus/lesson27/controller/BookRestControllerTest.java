@@ -31,23 +31,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
-@WebMvcTest
+@WebMvcTest(BookRestController.class)
 @DisplayName("Контроллер книг")
 public class BookRestControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
     @MockBean
     private BookService bookService;
-    @MockBean
-    private AuthorService authorService;
-    @MockBean
-    private GenreService genreService;
-    @MockBean
-    private CommentService commentService;
-    @MockBean
-    private UserService userService;
 
     @Test
     @WithMockUser(username = "user")
@@ -180,6 +171,22 @@ public class BookRestControllerTest {
     void whenGetBookListWithoutUserRole_thenForbidden() throws Exception {
         mockMvc.perform(get("/api/v1/book").with(user("user").roles("ADMIN")))
                 .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("должен требовать правильные роли для доступа к ресурсу")
+    @WithMockUser(username = "user", roles = {"ADMIN"})
+    void getBookList_shouldReturn403_whenNotAuthorized() throws Exception {
+        mockMvc.perform(get("/api/v1/book"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("должен требовать правильные роли для доступа к ресурсу")
+    @WithMockUser(username = "user", roles = {"USER"})
+    void getBooktList_shouldReturn4200_whenAuthorized() throws Exception {
+        mockMvc.perform(get("/api/v1/book"))
+                .andExpect(status().isOk());
     }
 
 

@@ -22,22 +22,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
-@WebMvcTest
-@DisplayName("Контроллер комментариева")
+@WebMvcTest(CommentRestController.class)
+@DisplayName("Контроллер комментариев")
 public class CommentRestControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
     @MockBean
-    private BookService bookService;
-    @MockBean
-    private AuthorService authorService;
-    @MockBean
-    private GenreService genreService;
-    @MockBean
     private CommentService commentService;
-    @MockBean
-    private UserService userService;
 
     @Test
     @WithMockUser(username = "user")
@@ -71,4 +63,21 @@ public class CommentRestControllerTest {
         mockMvc.perform(get("/api/v1/book/1/comment"))
                 .andExpect(redirectedUrl("http://localhost/login"));
     }
+
+    @Test
+    @DisplayName("должен требовать правильные роли для доступа к ресурсу")
+    @WithMockUser(username = "user", roles = {"ADMIN"})
+    void getCommentList_shouldReturn403_whenNotAuthorized() throws Exception {
+        mockMvc.perform(get("/api/v1/book/1/comment"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("должен требовать правильные роли для доступа к ресурсу")
+    @WithMockUser(username = "user", roles = {"USER"})
+    void getCommentList_shouldReturn4200_whenAuthorized() throws Exception {
+        mockMvc.perform(get("/api/v1/book/1/comment"))
+                .andExpect(status().isOk());
+    }
+
 }

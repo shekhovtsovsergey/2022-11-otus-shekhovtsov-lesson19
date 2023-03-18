@@ -22,22 +22,14 @@ import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
-@WebMvcTest
+@WebMvcTest(GenreRestController.class)
 @DisplayName("Контроллер жанров")
 public class GenreRestControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
     @MockBean
-    private BookService bookService;
-    @MockBean
-    private AuthorService authorService;
-    @MockBean
     private GenreService genreService;
-    @MockBean
-    private CommentService commentService;
-    @MockBean
-    private UserService userService;
 
     @Test
     @WithMockUser(username = "user")
@@ -71,4 +63,21 @@ public class GenreRestControllerTest {
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl("http://localhost/login"));
     }
+
+    @Test
+    @DisplayName("должен требовать правильные роли для доступа к ресурсу")
+    @WithMockUser(username = "user", roles = {"ADMIN"})
+    void getGenreList_shouldReturn403_whenNotAuthorized() throws Exception {
+        mockMvc.perform(get("/api/v1/genre"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("должен требовать правильные роли для доступа к ресурсу")
+    @WithMockUser(username = "user", roles = {"USER"})
+    void getGenreList_shouldReturn4200_whenAuthorized() throws Exception {
+        mockMvc.perform(get("/api/v1/genre"))
+                .andExpect(status().isOk());
+    }
+
 }

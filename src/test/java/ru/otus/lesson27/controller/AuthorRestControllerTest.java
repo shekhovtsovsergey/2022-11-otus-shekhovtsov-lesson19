@@ -20,22 +20,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
-@WebMvcTest
+@WebMvcTest(AuthorRestController.class)
 @DisplayName("Контроллер авторов")
 public class AuthorRestControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
     @MockBean
-    private BookService bookService;
-    @MockBean
     private AuthorService authorService;
-    @MockBean
-    private GenreService genreService;
-    @MockBean
-    private CommentService commentService;
-    @MockBean
-    private UserService userService;
 
     @Test
     @WithMockUser(username = "user")
@@ -70,4 +62,21 @@ public class AuthorRestControllerTest {
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl("http://localhost/login"));
     }
+
+    @Test
+    @DisplayName("должен требовать правильные роли для доступа к ресурсу")
+    @WithMockUser(username = "user", roles = {"ADMIN"})
+    void getAuthorList_shouldReturn403_whenNotAuthorized() throws Exception {
+        mockMvc.perform(get("/api/v1/author"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("должен требовать правильные роли для доступа к ресурсу")
+    @WithMockUser(username = "user", roles = {"USER"})
+    void getAuthorList_shouldReturn4200_whenAuthorized() throws Exception {
+        mockMvc.perform(get("/api/v1/author"))
+                .andExpect(status().isOk());
+    }
+
 }
