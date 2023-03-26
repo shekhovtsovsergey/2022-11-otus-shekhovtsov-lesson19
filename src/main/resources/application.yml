@@ -16,3 +16,14 @@ spring:
     spring.jpa.database-platform: org.hibernate.dialect.PostgreSQL
     show-sql: true
     open-in-view: false
+  data:
+    mongodb:
+      database: bookdb
+      port: 27017
+mongock:
+  runner-type: "InitializingBean"
+  change-logs-scan-package: ru.otus.lesson19.mongock.changelog
+  mongo-db:
+    write-concern:
+      journal: false
+    read-concern: local

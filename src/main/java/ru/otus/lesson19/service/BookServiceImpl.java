@@ -33,6 +33,7 @@ public class BookServiceImpl implements BookService{
 
     @Override
     public List<BookDto> getAllBooks() {
+        System.out.println(bookDao.findAll());
         return bookDao.findAll().stream().map(bookConverter::entityToDto).collect(Collectors.toList());
     }
 
