@@ -1,4 +1,4 @@
-package ru.otus.lesson19;
+package ru.otus.lesson19.shell;
 
 
 import lombok.RequiredArgsConstructor;
