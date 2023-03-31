@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.otus.lesson19.converter.GenreConverter;
-import ru.otus.lesson19.dao.GenreDao;
+import ru.otus.lesson19.dao.sql.GenreDao;
 import ru.otus.lesson19.dto.GenreDto;
 import ru.otus.lesson19.exception.GenreNotFoundException;
 import java.util.List;

@@ -1,6 +1,7 @@
-package ru.otus.lesson19.mongo;
+package ru.otus.lesson19.dao.mongo;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
+import ru.otus.lesson19.model.mongo.Genre;
 
 public interface GenreRepository extends MongoRepository<Genre, String> {
 

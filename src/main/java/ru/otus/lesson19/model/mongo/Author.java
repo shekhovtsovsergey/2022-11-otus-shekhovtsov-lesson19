@@ -1,22 +1,19 @@
-package ru.otus.lesson19.mongo;
+package ru.otus.lesson19.model.mongo;
 
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "comments")
+@Document(collection = "authors")
 @Getter
 @Setter
 @ToString
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class Comment {
-
+public class Author {
     @Id
     private String id;
-    private String authorName;
-    private String comment;
-    private Book book;
+    private String name;
 }

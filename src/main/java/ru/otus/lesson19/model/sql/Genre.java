@@ -1,4 +1,4 @@
-package ru.otus.lesson19.model;
+package ru.otus.lesson19.model.sql;
 
 
 import lombok.*;

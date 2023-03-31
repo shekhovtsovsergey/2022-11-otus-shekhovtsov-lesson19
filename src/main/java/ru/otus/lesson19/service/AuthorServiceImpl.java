@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.otus.lesson19.converter.AuthorConverter;
-import ru.otus.lesson19.dao.AuthorDao;
+import ru.otus.lesson19.dao.sql.AuthorDao;
 import ru.otus.lesson19.dto.AuthorDto;
 import ru.otus.lesson19.exception.AuthorNotFoundException;
 

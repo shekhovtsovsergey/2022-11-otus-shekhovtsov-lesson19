@@ -4,17 +4,16 @@ package ru.otus.lesson19.shell;
 import lombok.RequiredArgsConstructor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
-import ru.otus.lesson19.dao.AuthorDao;
-import ru.otus.lesson19.dao.BookDao;
-import ru.otus.lesson19.model.Author;
-import ru.otus.lesson19.mongo.Book;
-import ru.otus.lesson19.mongo.BookRepository;
+import ru.otus.lesson19.dao.sql.AuthorDao;
+import ru.otus.lesson19.model.sql.Author;
+import ru.otus.lesson19.model.mongo.Book;
+import ru.otus.lesson19.dao.mongo.BookRepository;
 
 import java.util.List;
 
 @ShellComponent
 @RequiredArgsConstructor
-public class LibraryCommands {
+public class BatchCommands {
 
     private final AuthorDao authorDao;
     private final BookRepository bookRepository;

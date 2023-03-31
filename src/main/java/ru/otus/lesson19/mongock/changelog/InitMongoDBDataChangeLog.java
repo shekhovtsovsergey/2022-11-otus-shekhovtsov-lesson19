@@ -5,7 +5,14 @@ import com.github.cloudyrock.mongock.ChangeLog;
 import com.github.cloudyrock.mongock.ChangeSet;
 import com.github.cloudyrock.mongock.driver.mongodb.springdata.v3.decorator.impl.MongockTemplate;
 import com.mongodb.client.MongoDatabase;
-import ru.otus.lesson19.mongo.*;
+import ru.otus.lesson19.dao.mongo.AuthorRepository;
+import ru.otus.lesson19.dao.mongo.BookRepository;
+import ru.otus.lesson19.dao.mongo.CommentRepository;
+import ru.otus.lesson19.dao.mongo.GenreRepository;
+import ru.otus.lesson19.model.mongo.Author;
+import ru.otus.lesson19.model.mongo.Book;
+import ru.otus.lesson19.model.mongo.Comment;
+import ru.otus.lesson19.model.mongo.Genre;
 
 import java.util.ArrayList;
 import java.util.List;

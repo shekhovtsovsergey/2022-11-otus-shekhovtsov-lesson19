@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.lesson19.converter.CommentConverter;
-import ru.otus.lesson19.dao.BookDao;
+import ru.otus.lesson19.dao.sql.BookDao;
 import ru.otus.lesson19.dto.CommentDto;
 import ru.otus.lesson19.exception.BookNotFoundException;;
 import java.util.List;

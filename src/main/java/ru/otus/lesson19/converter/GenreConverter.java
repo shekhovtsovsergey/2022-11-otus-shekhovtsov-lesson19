@@ -4,7 +4,7 @@ package ru.otus.lesson19.converter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.otus.lesson19.dto.GenreDto;
-import ru.otus.lesson19.model.Genre;
+import ru.otus.lesson19.model.sql.Genre;
 
 @Component
 @RequiredArgsConstructor

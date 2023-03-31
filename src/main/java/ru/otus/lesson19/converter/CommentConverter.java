@@ -4,7 +4,7 @@ package ru.otus.lesson19.converter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.otus.lesson19.dto.CommentDto;
-import ru.otus.lesson19.model.Comment;
+import ru.otus.lesson19.model.sql.Comment;
 
 @Component
 @RequiredArgsConstructor

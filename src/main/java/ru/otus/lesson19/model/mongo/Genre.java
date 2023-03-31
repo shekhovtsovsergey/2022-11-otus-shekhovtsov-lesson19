@@ -1,4 +1,4 @@
-package ru.otus.lesson19.mongo;
+package ru.otus.lesson19.model.mongo;
 
 
 import lombok.*;
