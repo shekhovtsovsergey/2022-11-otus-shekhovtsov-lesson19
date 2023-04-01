@@ -2,9 +2,12 @@ package ru.otus.lesson19.model.mongo;
 
 
 import lombok.*;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import ru.otus.lesson19.model.mongo.Book;
+
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 
 @Document(collection = "comments")
 @Getter
@@ -13,11 +16,12 @@ import ru.otus.lesson19.model.mongo.Book;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class Comment {
+public class CommentMongo {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private ObjectId id;
     private String authorName;
     private String comment;
-    private Book book;
+    private BookMongo book;
 }

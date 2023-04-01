@@ -5,10 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,16 +20,17 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Book {
+public class BookMongo {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private ObjectId id;
     private String name;
     @DBRef
-    private Author author;
+    private AuthorMongo author;
     @DBRef
-    private Genre genre;
+    private GenreMongo genre;
     @DBRef
-    private List<Comment> comment;
+    private List<CommentMongo> comment;
 
 
     @Override
@@ -45,7 +49,7 @@ public class Book {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass() && getClass() != o.getClass().getSuperclass()) return false;
-        Book book = (Book) o;
+        BookMongo book = (BookMongo) o;
         return id.equals(book.getId());
     }
 

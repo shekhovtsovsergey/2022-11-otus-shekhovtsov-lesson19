@@ -1,33 +1,30 @@
 package ru.otus.lesson19.shell;
 
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
-import ru.otus.lesson19.dao.sql.AuthorDao;
-import ru.otus.lesson19.model.sql.Author;
-import ru.otus.lesson19.model.mongo.Book;
-import ru.otus.lesson19.dao.mongo.BookRepository;
-
-import java.util.List;
 
 @ShellComponent
 @RequiredArgsConstructor
 public class BatchCommands {
 
-    private final AuthorDao authorDao;
-    private final BookRepository bookRepository;
+    private final Job loadDataToMongo;
+    private final Job loadDataToSql;
+    private final JobLauncher jobLauncher;
 
-    @ShellMethod(value = "Get", key = {"m"})
-    public String authors() {
-        List<Book> bookDaoList = bookRepository.findAll();
-        return String.format("Все книги: %s", bookDaoList);
+    @ShellMethod(value = "Migrate data from relational database to MongoDB", key = "sj")
+    public void startLoadDataToMongoJob() throws Exception {
+        JobExecution execution = jobLauncher.run(loadDataToMongo, new JobParameters());
+        System.out.println(execution);
     }
 
-    @ShellMethod(value = "Get", key = {"s"})
-    public String author() {
-        List<Author> authors = authorDao.findAll();
-        return String.format("Все книги: %s", authors);
+    @ShellMethod(value = "Migrate data from MongoDB database to relational", key = "sj2")
+    public void startLoadDataToSqlJob() throws Exception {
+        JobExecution execution = jobLauncher.run(loadDataToSql, new JobParameters());
+        System.out.println(execution);
     }
-
 }

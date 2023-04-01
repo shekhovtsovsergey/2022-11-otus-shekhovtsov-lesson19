@@ -17,21 +17,16 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "book_id", referencedColumnName = "id",
             foreignKey = @ForeignKey(name = "fk_books_comments"),
             nullable = false)
     private Book book;
-
     @Column(name = "author_name", nullable = false)
     private String authorName;
-
     @Column(name = "comment", nullable = false)
     private String comment;
-
-
     public String toString() {
         return "Comment{"
                 + "id='" + id + '\''
@@ -39,6 +34,4 @@ public class Comment {
                 + ", comment=" + comment
                 + '}';
     }
-
-
 }
