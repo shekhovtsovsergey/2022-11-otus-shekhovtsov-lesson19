@@ -9,7 +9,6 @@ import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
-
 import static ru.otus.lesson19.config.CsvToSqlJobConfig.INPUT_FILE_NAME;
 
 @ShellComponent
@@ -18,7 +17,7 @@ public class BatchCommands {
 
     private final Job loadDataToMongo;
     private final Job loadDataToSql;
-    private final Job loadBooksCsvToSql;
+    private final Job loadDataCsvToSql;
     private final JobLauncher jobLauncher;
 
     @ShellMethod(value = "Migrate data from relational database to MongoDB", key = "sj")
@@ -39,6 +38,7 @@ public class BatchCommands {
                 .addString(INPUT_FILE_NAME, inputFileName)
                 .addLong("time", System.currentTimeMillis())
                 .toJobParameters();
-        jobLauncher.run(loadBooksCsvToSql, jobParameters);
+        JobExecution execution = jobLauncher.run(loadDataCsvToSql, jobParameters);
+        System.out.println(execution);
     }
 }

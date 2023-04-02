@@ -9,38 +9,26 @@ import org.springframework.batch.core.configuration.annotation.StepBuilderFactor
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemProcessor;
-import org.springframework.batch.item.data.MongoItemReader;
 import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
-import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoOperations;
 import ru.otus.lesson19.dao.sql.AuthorDao;
 import ru.otus.lesson19.dao.sql.BookDao;
 import ru.otus.lesson19.dao.sql.GenreDao;
 import ru.otus.lesson19.dto.BookDto;
-import ru.otus.lesson19.model.mongo.AuthorMongo;
-import ru.otus.lesson19.model.mongo.BookMongo;
-import ru.otus.lesson19.model.mongo.CommentMongo;
-import ru.otus.lesson19.model.mongo.GenreMongo;
 import ru.otus.lesson19.model.sql.Author;
 import ru.otus.lesson19.model.sql.Book;
 import ru.otus.lesson19.model.sql.Comment;
-import ru.otus.lesson19.model.sql.Genre;
-
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 @Configuration
 @RequiredArgsConstructor
@@ -68,7 +56,7 @@ public class CsvToSqlJobConfig {
 
     @Bean
     public Step loadBooksCsvToSql() {
-        return stepBuilderFactory.get("loadBooksCsvToSql")
+        return stepBuilderFactory.get("loadDataCsvToSql")
                 .<BookDto, Book>chunk(CHUNK_SIZE)
                 .reader(bookCsvReader(null))
                 .processor(bookCsvProcessor())
