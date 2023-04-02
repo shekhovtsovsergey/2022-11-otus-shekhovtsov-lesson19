@@ -13,6 +13,7 @@ import org.springframework.batch.item.data.MongoItemWriter;
 import org.springframework.batch.item.database.HibernatePagingItemReader;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.mongodb.core.MongoOperations;
 import ru.otus.lesson19.dao.mongo.AuthorRepository;
 import ru.otus.lesson19.dao.mongo.BookRepository;
@@ -32,7 +33,6 @@ public class SqlToMongoJobConfig {
 
     private static final int CHUNK_SIZE = 5;
     public static final String JOB_NAME = "loadDataToMongo";
-
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
     private final BookRepository bookRepository;
