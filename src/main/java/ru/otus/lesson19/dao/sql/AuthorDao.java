@@ -3,6 +3,9 @@ package ru.otus.lesson19.dao.sql;
 import org.springframework.data.jpa.repository.JpaRepository;
 import ru.otus.lesson19.model.sql.Author;
 
+import java.util.Optional;
+
 public interface AuthorDao extends JpaRepository<Author, Long> {
 
+    Author findFirstByName(String name);
 }

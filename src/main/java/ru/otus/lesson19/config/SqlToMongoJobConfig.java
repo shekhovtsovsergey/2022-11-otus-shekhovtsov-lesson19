@@ -14,7 +14,10 @@ import org.springframework.batch.item.database.HibernatePagingItemReader;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoOperations;
+import ru.otus.lesson19.dao.mongo.AuthorRepository;
 import ru.otus.lesson19.dao.mongo.BookRepository;
+import ru.otus.lesson19.dao.mongo.GenreRepository;
+import ru.otus.lesson19.exeption.EntityNotFoundException;
 import ru.otus.lesson19.model.mongo.AuthorMongo;
 import ru.otus.lesson19.model.mongo.BookMongo;
 import ru.otus.lesson19.model.mongo.CommentMongo;
@@ -33,6 +36,8 @@ public class SqlToMongoJobConfig {
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
     private final BookRepository bookRepository;
+    private final AuthorRepository authorRepository;
+    private final GenreRepository genreRepository;
     private final EntityManagerFactory entityManagerFactory;
     private final MongoOperations mongoOperations;
 
@@ -43,6 +48,10 @@ public class SqlToMongoJobConfig {
                 .start(loadBooksToMongo())
                 .build();
     }
+
+    //================================================
+    // This block of code is responsible for the books
+    //================================================
 
     @Bean
     public Step loadBooksToMongo() {
@@ -72,11 +81,28 @@ public class SqlToMongoJobConfig {
     @Bean
     public ItemProcessor<Book, BookMongo> bookProcessor() {
         return book -> {
+            var authorName = book.getAuthor().getName();
+            var author = authorRepository.findFirstByName(authorName);
+            if (author == null) {
+                throw new javax.persistence.EntityNotFoundException("Author not found");
+            }
+            var genreName = book.getGenre().getName();
+            var genre = genreRepository.findFirstByName(genreName);
+            if (genre == null) {
+                throw new javax.persistence.EntityNotFoundException("Genre not found");
+            }
+            return new BookMongo(ObjectId.get(), book.getName(), author, genre, new ArrayList<CommentMongo>());
+        };
+    }
+
+/*    @Bean
+    public ItemProcessor<Book, BookMongo> bookProcessor() {
+        return book -> {
             var author = new AuthorMongo(ObjectId.get(), book.getAuthor().getName());
             var genre = new GenreMongo(ObjectId.get(), book.getGenre().getName());
             return new BookMongo(ObjectId.get(), book.getName(), author, genre, new ArrayList<CommentMongo>());
         };
-    }
+    }*/
 
     @Bean
     public MongoItemWriter<BookMongo> bookMongoWriter() {
