@@ -34,7 +34,7 @@ import java.util.ArrayList;
 @RequiredArgsConstructor
 public class CsvToSqlJobConfig {
 
-    private static final int CHUNK_SIZE = 5;
+    private static final int CHUNK_SIZE = 100;
     public static final String JOB_NAME = "loadDataCsvToSql";
     public static final String INPUT_FILE_NAME = "inputFileName";
     private final JobBuilderFactory jobBuilderFactory;
@@ -53,12 +53,11 @@ public class CsvToSqlJobConfig {
                 .start(loadBooksCsvToSql())
                 .build();
     }
-
     @Bean
     public Step loadBooksCsvToSql() {
         return stepBuilderFactory.get("loadDataCsvToSql")
                 .<BookDto, Book>chunk(CHUNK_SIZE)
-                .reader(bookCsvReader(null))
+                .reader(bookCsvReader(INPUT_FILE_NAME))
                 .processor(bookCsvProcessor())
                 .writer(bookCsvToSqlWriter())
                 .build();
@@ -69,10 +68,11 @@ public class CsvToSqlJobConfig {
     public FlatFileItemReader<BookDto> bookCsvReader(@Value("#{jobParameters['" + INPUT_FILE_NAME + "']}") String inputFileName) {
         var reader = new FlatFileItemReader<BookDto>();
         reader.setResource(new FileSystemResource(inputFileName));
+        reader.setLinesToSkip(1);
         reader.setLineMapper(new DefaultLineMapper<BookDto>() {{
             setLineTokenizer(new DelimitedLineTokenizer() {{
-                setDelimiter(";");
-                setNames(new String[]{"name", "author", "genre"});
+                setDelimiter(",");
+                setNames(new String[]{"", "name", "author", "genre"});
             }});
             setFieldSetMapper(new BeanWrapperFieldSetMapper<BookDto>() {{
                 setTargetType(BookDto.class);
