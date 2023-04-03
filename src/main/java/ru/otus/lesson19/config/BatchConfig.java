@@ -5,9 +5,11 @@ import org.springframework.batch.core.configuration.annotation.EnableBatchProces
 import org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @EnableBatchProcessing
 @Configuration
+@EnableTransactionManagement
 public class BatchConfig {
 
     @Bean
