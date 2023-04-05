@@ -13,11 +13,7 @@ import ru.otus.lesson19.model.mongo.AuthorMongo;
 import ru.otus.lesson19.model.mongo.BookMongo;
 import ru.otus.lesson19.model.mongo.CommentMongo;
 import ru.otus.lesson19.model.mongo.GenreMongo;
-
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @ChangeLog(order = "001")
 public class InitMongoDBDataChangeLog {
@@ -30,12 +26,6 @@ public class InitMongoDBDataChangeLog {
 
     private GenreMongo documental;
     private GenreMongo historycal;
-
-    private BookMongo bookOne;
-    private BookMongo bookTwo;
-    private BookMongo bookThree;
-    private BookMongo bookFour;
-    private BookMongo bookFive;
 
 
     @ChangeSet(order = "000", id = "dropDb", author = "shekhovtsov", runAlways = true)
@@ -60,20 +50,9 @@ public class InitMongoDBDataChangeLog {
 
     @ChangeSet(order = "003", id = "initBooks", author = "shekhovtsov", runAlways = true)
     public void initBooks(BookRepository bookRepository, CommentRepository commentRepository) {
-        bookOne = bookRepository.save(new BookMongo(null, "Ned ad trappen, ud på gaden (Danish Edition)", leanNielsen, documental,new ArrayList<CommentMongo>()));
-        bookTwo = bookRepository.save(new BookMongo(null, "Kesses krig (Unge læsere) (Danish Edition)", leanNielsen, documental,new ArrayList<CommentMongo>()));
-        bookThree = bookRepository.save(new BookMongo(null, "Hjørnestuen og månehavet: Erindringer 1934-1938 (Danish Edition)", leanNielsen, documental,new ArrayList<CommentMongo>()));
-        bookFour = bookRepository.save(new BookMongo(null, "Vandgården: Roman (Danish Edition)", leanNielsen, documental,new ArrayList<CommentMongo>()));
-        bookFive = bookRepository.save(new BookMongo(null, "Thea (Danish Edition)", leanNielsen, documental,new ArrayList<CommentMongo>()));
-    }
-
-    @ChangeSet(order = "004", id = "initComments", author = "shekhovtsov", runAlways = true)
-    public void initComments(MongockTemplate mongoTemplate) {
-        List<CommentMongo> comments = IntStream.range(0, 5)
-                .mapToObj(i -> new CommentMongo(null, "shekhovtsov", "habe nichts verstanden", bookOne))
-                .collect(Collectors.toList());
-        mongoTemplate.insertAll(comments);
-        bookOne.getComment().addAll(comments);
-        mongoTemplate.save(bookOne);
+        for (int i = 1; i <= 100; i++) {
+            BookMongo book = new BookMongo(null, "Book " + i, leanNielsen, documental, new ArrayList<CommentMongo>());
+            bookRepository.save(book);
+        }
     }
 }

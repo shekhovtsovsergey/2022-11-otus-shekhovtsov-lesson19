@@ -11,6 +11,7 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Genre {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

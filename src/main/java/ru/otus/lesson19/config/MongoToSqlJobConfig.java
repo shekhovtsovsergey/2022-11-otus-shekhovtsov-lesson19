@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.lesson19.dao.sql.AuthorDao;
 import ru.otus.lesson19.dao.sql.BookDao;
 import ru.otus.lesson19.dao.sql.GenreDao;
@@ -21,19 +22,20 @@ import ru.otus.lesson19.model.mongo.BookMongo;
 import ru.otus.lesson19.model.mongo.GenreMongo;
 import ru.otus.lesson19.model.sql.Author;
 import ru.otus.lesson19.model.sql.Book;
-import ru.otus.lesson19.model.sql.Comment;
 import ru.otus.lesson19.model.sql.Genre;
 import org.springframework.batch.core.Job;
+import ru.otus.lesson19.service.CacheService;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
 
 @Configuration
 @RequiredArgsConstructor
 public class MongoToSqlJobConfig {
 
-    private static final int CHUNK_SIZE = 5;
+    private static final int CHUNK_SIZE = 100000;
     public static final String JOB_NAME = "loadDataToSql";
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
@@ -42,6 +44,7 @@ public class MongoToSqlJobConfig {
     private final GenreDao genreDao;
     private final EntityManagerFactory entityManagerFactory;
     private final MongoOperations mongoOperations;
+    private final CacheService cacheService;
 
 
     @Bean
@@ -54,9 +57,6 @@ public class MongoToSqlJobConfig {
                 .build();
     }
 
-    //==================================================
-    // This block of code is responsible for the authors
-    //==================================================
 
     @Bean
     public Step loadAuthorToSql() {
@@ -85,7 +85,7 @@ public class MongoToSqlJobConfig {
     @Bean
     public ItemProcessor<AuthorMongo, Author> authorMongoProcessor() {
         return authorMongo -> {
-            return new Author(null,authorMongo.getName());
+        return new Author(null,authorMongo.getName());
         };
     }
 
@@ -96,9 +96,6 @@ public class MongoToSqlJobConfig {
         return writer;
     }
 
-    //=================================================
-    // This block of code is responsible for the genres
-    //=================================================
 
     @Bean
     public Step loadGenreToSql() {
@@ -139,22 +136,18 @@ public class MongoToSqlJobConfig {
     }
 
 
-    //================================================
-    // This block of code is responsible for the books
-    //================================================
-
     @Bean
     public Step loadBooksToSql() {
         return stepBuilderFactory.get("loadBooksToSql")
                 .<BookMongo, Book>chunk(CHUNK_SIZE)
-                .reader(bookMongoReader())
+                .reader(bookMongoReader(mongoOperations))
                 .processor(bookMongoProcessor())
                 .writer(bookSqlWriter())
                 .build();
     }
 
     @Bean
-    public MongoItemReader<BookMongo> bookMongoReader() {
+    public MongoItemReader<BookMongo> bookMongoReader(MongoOperations mongoOperations) {
         var reader = new MongoItemReader<BookMongo>();
         reader.setTemplate(mongoOperations);
         reader.setCollection("books");
@@ -163,29 +156,58 @@ public class MongoToSqlJobConfig {
             put("id", Sort.Direction.ASC);
         }});
         reader.setTargetType(BookMongo.class);
+        reader.setPageSize(100000);
         return reader;
     }
 
     @Bean
     public ItemProcessor<BookMongo, Book> bookMongoProcessor() {
         return bookMongo -> {
-            Author author = authorDao.findFirstByName(bookMongo.getAuthor().getName());
-            if (author == null) {
-                throw new EntityNotFoundException("Author not found");
-            }
-
-            var genre = genreDao.findFirstByName(bookMongo.getGenre().getName());
-            if (genre == null) {
-                throw new EntityNotFoundException("Genre not found");
-            }
-            return new Book(null, bookMongo.getName(), author, genre, new ArrayList<Comment>());
+            return new Book(
+                    null,
+                    bookMongo.getName(),
+                    new Author(null, bookMongo.getAuthor().getName()),
+                    new Genre(null, bookMongo.getGenre().getName()),
+                    new ArrayList<>()
+            );
         };
     }
 
+
+    @Transactional
     @Bean
     public JpaItemWriter<Book> bookSqlWriter() {
         var writer = new JpaItemWriter<Book>();
         writer.setEntityManagerFactory(entityManagerFactory);
-        return writer;
+        JpaItemWriter<Book> cachedWriter = new JpaItemWriter<Book>() {
+
+            @Override
+            public void write(List<? extends Book> items) {
+                List<Book> booksToSave = new ArrayList<>();
+                for (Book item : items) {
+                    Author author = cacheService.getAuthorByName(item.getAuthor().getName());
+                    Genre genre = cacheService.getGenreByName(item.getGenre().getName());
+                    if (author == null) {
+                        author = authorDao.findFirstByName(item.getAuthor().getName());
+                        if (author != null) {
+                            cacheService.putAuthor(author);
+                        }
+                    }
+                    if (genre == null) {
+                        genre = genreDao.findFirstByName(item.getGenre().getName());
+                        if (genre != null) {
+                            cacheService.putGenre(genre);
+                        }
+                    }
+                    item.setAuthor(author);
+                    item.setGenre(genre);
+                    booksToSave.add(item);
+                }
+                bookDao.saveAll(booksToSave);
+            }
+        };
+        cachedWriter.setEntityManagerFactory(entityManagerFactory);
+        return cachedWriter;
     }
+
 }

@@ -1,11 +1,12 @@
-server:
-  port: 8080
 spring:
   datasource:
     driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:mydatabase;MODE=PostgreSQL
     username: sa
     password:
+  hibernate:
+    jdbc:
+      batch_size: 1000
   h2:
     console:
       enabled: true
@@ -16,6 +17,12 @@ spring:
     spring.jpa.database-platform: org.hibernate.dialect.PostgreSQL
     show-sql: true
     open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          batch_size: 100000
+          order_inserts: true
+          order_updates: true
   data:
     mongodb:
       database: bookdb
