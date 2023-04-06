@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.transaction.annotation.Transactional;
 import ru.otus.lesson19.dao.sql.AuthorDao;
 import ru.otus.lesson19.dao.sql.BookDao;
 import ru.otus.lesson19.dao.sql.GenreDao;
@@ -28,7 +27,6 @@ import ru.otus.lesson19.service.CacheService;
 import javax.persistence.EntityManagerFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 
 @Configuration
@@ -93,7 +91,9 @@ public class MongoToSqlJobConfig {
     public JpaItemWriter<Author> authorSqlWriter() {
         var writer = new JpaItemWriter<Author>();
         writer.setEntityManagerFactory(entityManagerFactory);
-        return writer;
+        JpaItemWriter<Author> authorWriter = new AuthorWriter(cacheService, authorDao, entityManagerFactory);
+        authorWriter.setEntityManagerFactory(entityManagerFactory);
+        return authorWriter;
     }
 
 
@@ -132,7 +132,9 @@ public class MongoToSqlJobConfig {
     public JpaItemWriter<Genre> genreSqlWriter() {
         var writer = new JpaItemWriter<Genre>();
         writer.setEntityManagerFactory(entityManagerFactory);
-        return writer;
+        JpaItemWriter<Genre> genreWriter = new GenreWriter(cacheService, genreDao);
+        genreWriter.setEntityManagerFactory(entityManagerFactory);
+        return genreWriter;
     }
 
 
@@ -142,7 +144,7 @@ public class MongoToSqlJobConfig {
                 .<BookMongo, Book>chunk(CHUNK_SIZE)
                 .reader(bookMongoReader(mongoOperations))
                 .processor(bookMongoProcessor())
-                .writer(bookSqlWriter())
+                .writer(bookSqlWriter(entityManagerFactory,  cacheService,  authorDao,  genreDao,  bookDao))
                 .build();
     }
 
@@ -174,40 +176,8 @@ public class MongoToSqlJobConfig {
     }
 
 
-    @Transactional
     @Bean
-    public JpaItemWriter<Book> bookSqlWriter() {
-        var writer = new JpaItemWriter<Book>();
-        writer.setEntityManagerFactory(entityManagerFactory);
-        JpaItemWriter<Book> cachedWriter = new JpaItemWriter<Book>() {
-
-            @Override
-            public void write(List<? extends Book> items) {
-                List<Book> booksToSave = new ArrayList<>();
-                for (Book item : items) {
-                    Author author = cacheService.getAuthorByName(item.getAuthor().getName());
-                    Genre genre = cacheService.getGenreByName(item.getGenre().getName());
-                    if (author == null) {
-                        author = authorDao.findFirstByName(item.getAuthor().getName());
-                        if (author != null) {
-                            cacheService.putAuthor(author);
-                        }
-                    }
-                    if (genre == null) {
-                        genre = genreDao.findFirstByName(item.getGenre().getName());
-                        if (genre != null) {
-                            cacheService.putGenre(genre);
-                        }
-                    }
-                    item.setAuthor(author);
-                    item.setGenre(genre);
-                    booksToSave.add(item);
-                }
-                bookDao.saveAll(booksToSave);
-            }
-        };
-        cachedWriter.setEntityManagerFactory(entityManagerFactory);
-        return cachedWriter;
+    public JpaItemWriter<Book> bookSqlWriter(EntityManagerFactory entityManagerFactory, CacheService cacheService, AuthorDao authorDao, GenreDao genreDao, BookDao bookDao) {
+        return new BookWriter(entityManagerFactory, cacheService, authorDao, genreDao, bookDao);
     }
-
 }

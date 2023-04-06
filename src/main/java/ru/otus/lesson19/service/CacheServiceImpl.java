@@ -3,7 +3,6 @@ package ru.otus.lesson19.service;
 import org.springframework.stereotype.Service;
 import ru.otus.lesson19.model.sql.Author;
 import ru.otus.lesson19.model.sql.Genre;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
