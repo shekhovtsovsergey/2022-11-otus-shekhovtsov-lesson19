@@ -1,17 +1,18 @@
 server:
-  port: 8080
+  port: 8189
 spring:
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://postgres:5432/db
-    username: postgres
-    password: postgres
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:mydatabase;MODE=PostgreSQL
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: true
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    spring.jpa.database-platform: org.hibernate.dialect.PostgreSQL
     show-sql: true
     open-in-view: false
-    hibernate:
-      ddl-auto: update
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
